@@ -4,7 +4,7 @@ const orderSchema = new mongoose.Schema(
   {
     userId: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "User",
+      ref: "users",
       required: true,
     },
 
@@ -12,7 +12,7 @@ const orderSchema = new mongoose.Schema(
       {
         productId: {
           type: mongoose.Schema.Types.ObjectId,
-          ref: "Product",
+          ref: "products",
         },
         title: String,
         image: String,
@@ -20,6 +20,25 @@ const orderSchema = new mongoose.Schema(
         quantity: Number,
       },
     ],
+
+    shippingAddress: {
+      fullname: {
+        type: String,
+        required: true,
+      },
+      contact: {
+        type: String,
+        required: true,
+      },
+      city: {
+        type: String,
+        required: true,
+      },
+      address: {
+        type: String,
+        required: true,
+      },
+    },
 
     subtotal: {
       type: Number,
@@ -44,7 +63,7 @@ const orderSchema = new mongoose.Schema(
   },
   {
     timestamps: true,
-  }
+  },
 );
 
 export const Order = mongoose.model("Order", orderSchema);
