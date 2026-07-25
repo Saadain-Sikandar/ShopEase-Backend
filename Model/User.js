@@ -32,7 +32,7 @@ const userSchema = new mongoose.Schema(
         },
       },
     ],
-    wishlish: [
+    wishlist: [
       {
         type: mongoose.Schema.Types.ObjectId,
         ref: "products",
