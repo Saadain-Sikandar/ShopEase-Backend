@@ -29,7 +29,7 @@ app.use('/api/cart',cartRoutes)
 // wihslist 
 app.use("/api/wishlist",wishListRoutes)
 // orders 
-app.use("/api/orders/",orderRoutes)
+app.use("/api/orders",orderRoutes)
 // Admin
 app.use("/api/admin",adminRoutes)
 

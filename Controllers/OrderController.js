@@ -1,4 +1,5 @@
 import { Order } from "../Model/Orders.js";
+import { Product } from "../Model/Product.js";
 import { User } from "../Model/User.js";
 
 // add to orders
@@ -97,7 +98,10 @@ export const GetMyorders = async (req, res) => {
 export const GetOrderById = async (req, res) => {
   try {
     const { id } = req.params;
-    const order = await Order.findOne({_id:id,userId:req.user._id}).populate("products.productId");
+    const order = await Order.findOne({
+      _id: id,
+      userId: req.user._id,
+    }).populate("products.productId");
     if (!order) {
       return res.status(404).json({
         message: "Order Not Found!",
@@ -105,6 +109,54 @@ export const GetOrderById = async (req, res) => {
     }
     return res.status(200).json({
       message: "Order fetched successfully!",
+      order,
+    });
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json({
+      message: "Internal Server Error!",
+    });
+  }
+};
+
+// Cancel order
+export const CancelOrder = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const order = await Order.findOne({ _id: id, userId: req.user._id });
+
+    if (!order) {
+      return res.status(404).json({
+        message: "Order not Found!",
+      });
+    }
+    // if cancelled
+    if (order.status === "Cancelled") {
+      return res.status(400).json({
+        message: "Order already cancelled!",
+      });
+    }
+    // if not pending
+    if (order.status !== "Pending") {
+      return res.status(400).json({
+        message: `Cannot cancel order at this moment!"(${order.status})"`,
+      });
+    }
+
+    // restoring stocks
+    for (const item of order.products) {
+      const product = await Product.findById(item.productId);
+      if (product) {
+        product.stock += item.quantity;
+        await product.save();
+      }
+    }
+    // order cancelled
+    order.status = "Cancelled";
+    await order.save();
+
+    return res.status(200).json({
+      message: "Order cancelled Successfully!",
       order,
     });
   } catch (error) {
