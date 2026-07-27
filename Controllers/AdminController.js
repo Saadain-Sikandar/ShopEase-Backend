@@ -4,10 +4,7 @@ import { User } from "../Model/User.js";
 
 export const GetAllOrders = async (req, res) => {
   try {
-    const orders = await Order.find()
-      .populate("userId", "fullname email") // return only fullname and email
-      .populate("products.productId")
-      .sort({ createdAt: -1 });
+    const orders = await Order.find().sort({ createdAt: -1 });
     if (orders.length === 0) {
       return res.status(404).json({
         message: "Orders not Found!",
@@ -22,6 +19,32 @@ export const GetAllOrders = async (req, res) => {
     return res.status(500).json({
       message: "Internal Server Error!",
     });
+  }
+};
+
+// by id
+export const AdminGetOrderById = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const order = await Order.findById(id)
+      .populate("userId", "fullname email contact city  address") // return only selected keys
+      .populate("products.productId");
+
+    if (!order) {
+      return res.status(404).json({
+        message: "Product Not Found!",
+      });
+    }
+    return res.status(200).json({
+      message: "Order fetched successfully!",
+      order,
+    });
+  } catch (error) {
+    console.log(error);
+
+    return res.status(500).json({
+      message: "Internal Server Error!",
+    }); 
   }
 };
 
@@ -93,10 +116,10 @@ export const DeleteUser = async (req, res) => {
     }
 
     const deleteUser = await User.findByIdAndDelete(id);
-    if(!deleteUser){
+    if (!deleteUser) {
       return res.status(404).json({
-        message:"User Not Found!",
-      })
+        message: "User Not Found!",
+      });
     }
 
     return res.status(200).json({

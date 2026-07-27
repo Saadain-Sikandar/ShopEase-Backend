@@ -3,22 +3,31 @@ import { Product } from "../Model/Product.js";
 // add
 export const AddProduct = async (req, res) => {
   try {
-    const { title, description, price, stock, category, images } = req.body;
+    const { title, description, price, stock, category } = req.body;
 
-    if (!title || !description || !price || !stock || !category || !images) {
+    if (!title || !description || !price || !stock || !category) {
       return res.status(400).json({
         message: "Please Fill all Reqired Fields!s",
       });
     }
+
+    if (!req.files || req.files.length === 0) {
+      return res.status(400).json({
+        message: "Please upload at least one image!",
+      });
+    }
+
+    const imagesPath = req.files.map((file) => `/uploads/${file.filename}`);
+
     const product = await Product.create({
       title,
       description,
       price,
       stock,
       category,
-      images,
+      images: imagesPath,
     });
-    res.status(201).json({
+    return res.status(201).json({
       message: "Product added Successfully!",
       product,
     });

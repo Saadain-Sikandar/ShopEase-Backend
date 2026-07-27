@@ -1,5 +1,6 @@
 import express from "express";
 import {
+    AdminGetOrderById,
     DeleteUser,
     GetAllOrders,
     GetAllUser,
@@ -11,6 +12,7 @@ import AuthMiddleWare from "../MiddleWare/AuthMiddleWare.js";
 const router = express.Router();
 
 router.get("/orders", AuthMiddleWare, AdminMiddleWare, GetAllOrders);
+router.get("/orders/:id", AuthMiddleWare, AdminMiddleWare, AdminGetOrderById);
 router.put("/orders/:id", AuthMiddleWare, AdminMiddleWare, UpdateOrderStatus);
 router.get("/users", AuthMiddleWare, AdminMiddleWare, GetAllUser);
 router.delete("/users/:id", AuthMiddleWare, AdminMiddleWare, DeleteUser);
