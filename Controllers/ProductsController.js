@@ -11,13 +11,11 @@ export const AddProduct = async (req, res) => {
       });
     }
 
-    if (!req.files || req.files.length === 0) {
+    if (!req.file) {
       return res.status(400).json({
-        message: "Please upload at least one image!",
+        message: "Please upload an image!",
       });
     }
-
-    const imagesPath = req.files.map((file) => `/uploads/${file.filename}`);
 
     const product = await Product.create({
       title,
@@ -25,7 +23,7 @@ export const AddProduct = async (req, res) => {
       price,
       stock,
       category,
-      images: imagesPath,
+      images: [`/uploads/${req.file.filename}`],
     });
     return res.status(201).json({
       message: "Product added Successfully!",
@@ -34,7 +32,7 @@ export const AddProduct = async (req, res) => {
   } catch (error) {
     console.log(error);
     return res.status(500).json({
-      message: "Internal Server Error!",
+      message: error.message,
     });
   }
 };
@@ -79,7 +77,6 @@ export const getSingleProduct = async (req, res) => {
 };
 
 // update product
-
 export const UpdateProduct = async (req, res) => {
   try {
     const { id } = req.params;

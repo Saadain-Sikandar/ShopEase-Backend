@@ -56,7 +56,7 @@ export const UpdateOrderStatus = async (req, res) => {
 
     const validStatus = ["Pending", "In Process", "Completed", "Cancelled"];
 
-    if (!validStatus) {
+    if (!validStatus.includes(status)) {
       return res.status(400).json({
         message: "Invalid Order Status!",
       });

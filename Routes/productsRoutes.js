@@ -17,14 +17,13 @@ router.post(
   "/",
   AuthMiddleWare,
   AdminMiddleWare,
-  upload.array("images", 5),
+  upload.single("image"),
   AddProduct,
 );
+router.put("/:id", AuthMiddleWare, AdminMiddleWare, UpdateProduct);
+router.delete("/:id", AuthMiddleWare, AdminMiddleWare, DeleteProduct);
 // user
 router.get("/", GetProducts);
 router.get("/:id", getSingleProduct);
-// admin
-router.put("/:id", AuthMiddleWare, AdminMiddleWare, UpdateProduct);
-router.delete("/:id", AuthMiddleWare, AdminMiddleWare, DeleteProduct);
 
 export default router;
