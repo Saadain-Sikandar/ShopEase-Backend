@@ -1,3 +1,4 @@
+import { User } from "../Model/User.js";
 
 export const profileController = async (req, res) => {
   try {
@@ -18,11 +19,19 @@ export const UpdateProfile = async (req, res) => {
   try {
     const { email, fullname, contact, city, address } = req.body;
 
-    const user = req.user
+    const user = req.user;
 
     if (!user) {
       return res.status(404).json({
         message: "User not found!",
+      });
+    }
+
+    const existEmail = await User.findOne({ email });
+
+    if (existEmail && existEmail._id.toString() !== user._id.toString()) {
+      return res.status(400).json({
+        message: "Email already exists!",
       });
     }
 
