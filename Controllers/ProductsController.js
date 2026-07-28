@@ -81,7 +81,18 @@ export const UpdateProduct = async (req, res) => {
   try {
     const { id } = req.params;
 
-    const updatedProduct = await Product.findByIdAndUpdate(id, req.body, {
+    const updateData = {
+      title: req.body.title,
+      description: req.body.description,
+      price: req.body.price,
+      stock: req.body.stock,
+      category: req.body.category,
+    };
+    if (req.file) {
+      updateData.images = [`/uploads/${req.file.filename}`];
+    }
+
+    const updatedProduct = await Product.findByIdAndUpdate(id, updateData, {
       new: true, //return updated doc
       runValidators: true, // valide the fields
     });
@@ -93,12 +104,12 @@ export const UpdateProduct = async (req, res) => {
     }
     return res.status(200).json({
       message: "Product Updated Successfully!!",
-      products: updatedProduct,
+      product: updatedProduct,
     });
   } catch (error) {
     console.log(error);
     return res.status(500).json({
-      message: "Inter Server Error!",
+      message: "Internal Server Error!",
     });
   }
 };

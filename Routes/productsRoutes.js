@@ -20,7 +20,13 @@ router.post(
   upload.single("image"),
   AddProduct,
 );
-router.put("/:id", AuthMiddleWare, AdminMiddleWare, UpdateProduct);
+router.put(
+  "/:id",
+  AuthMiddleWare,
+  AdminMiddleWare,
+  upload.single("image"),
+  UpdateProduct,
+);
 router.delete("/:id", AuthMiddleWare, AdminMiddleWare, DeleteProduct);
 // user
 router.get("/", GetProducts);
