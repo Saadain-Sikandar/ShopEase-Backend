@@ -32,6 +32,7 @@ export const AddToCart = async (req, res) => {
       user.cart.push({ productId, quantity });
     }
     await user.save();
+    await user.populate("cart.productId"); // after adding again it populates
     return res.status(200).json({
       message: "Product added to cart successfully!",
       cart: user.cart,
@@ -96,6 +97,7 @@ export const UpdateCart = async (req, res) => {
     cartItem.quantity = quantity;
 
     await user.save();
+    await user.populate("cart.productId"); // after updating the quantity it populates
     return res.status(200).json({
       message: "Cart updated successfully!",
       cart: user.cart,
@@ -108,7 +110,7 @@ export const UpdateCart = async (req, res) => {
   }
 };
 
-// delete 
+// delete
 export const DeleteCart = async (req, res) => {
   try {
     const { productId } = req.params;
@@ -126,6 +128,7 @@ export const DeleteCart = async (req, res) => {
       (item) => item.productId.toString() !== productId,
     );
     await user.save();
+    await user.populate("cart.productId"); // after removing item
     return res.status(200).json({
       message: "Product removed from cart!",
       cart: user.cart,
