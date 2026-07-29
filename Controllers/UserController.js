@@ -17,6 +17,7 @@ export const profileController = async (req, res) => {
 // update profile
 export const UpdateProfile = async (req, res) => {
   try {
+    console.log(req.body);
     const { email, fullname, contact, city, address } = req.body;
 
     const user = req.user;

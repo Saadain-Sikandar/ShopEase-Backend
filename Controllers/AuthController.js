@@ -11,6 +11,11 @@ export const SignupController = async (req, res) => {
         message: "Please fill all fIelds!",
       });
     }
+    if (email !== email.toLowerCase()) {
+      return res.status(400).json({
+        message: "Email should be in lower case!",
+      });
+    }
     const emailExist = await User.findOne({
       email,
     });
@@ -65,7 +70,7 @@ export const LoginController = async (req, res) => {
         message: "Invalid Credentials!",
       });
     }
-    // JWT 
+    // JWT
     const token = jwt.sign(
       { id: user._id, email: user.email },
       process.env.JWT_SECRET_KEY,
