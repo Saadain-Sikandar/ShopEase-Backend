@@ -5,7 +5,7 @@ import { User } from "../Model/User.js";
 // add to orders
 export const PlaceOrder = async (req, res) => {
   try {
-    const { fullname, contact, city, address } = req.body;
+    const { email,fullname, contact, city, address } = req.body;
     if (!fullname || !contact || !city || !address) {
       return res.status(400).json({
         message: "Please provide all shipping details!",
@@ -30,6 +30,7 @@ export const PlaceOrder = async (req, res) => {
         });
       }
       subtotal += product.price * item.quantity;
+      // save data so that history remains same 
       orderProducts.push({
         productId: product._id,
         title: product.title,
@@ -42,11 +43,12 @@ export const PlaceOrder = async (req, res) => {
     }
     const shipping = 0;
     const total = subtotal + shipping;
-
+    // creating order 
     const order = await Order.create({
       userId: user._id,
       products: orderProducts,
       shippingAddress: {
+        email,
         fullname,
         contact,
         city,
