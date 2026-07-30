@@ -14,17 +14,20 @@ export const AddtoWish = async (req, res) => {
       });
     }
     // check existing
-    const exist = user.wishlist.find((item) => item.toString() === productId);
+    const exist = user.wishlist.find(
+      (item) => item.product.toString() === productId,
+    );
     if (exist) {
       return res.status(400).json({
-        message: "Product already in Cart!",
+        message: "Product already in wishlist!",
       });
     }
     // add product
-    user.wishlist.push(productId);
+    user.wishlist.push({ product: productId });
     await user.save();
     return res.status(200).json({
       message: "Product added to wishlist!",
+      wishlist: user.wishlist.product,
     });
   } catch (error) {
     console.log(error);
@@ -37,7 +40,10 @@ export const AddtoWish = async (req, res) => {
 // get wish
 export const getWishlist = async (req, res) => {
   try {
-    const user = await User.findById(req.user._id).populate("wishlist");
+    const user = await User.findById(req.user._id).populate({
+      path: "wishlist.product",
+      model: "products",
+    });
     return res.status(200).json({
       message: "wishlist Fetched Successfully!",
       wishlist: user.wishlist,
@@ -58,7 +64,7 @@ export const DeletefromWish = async (req, res) => {
     const user = await User.findById(req.user._id);
 
     const wishItem = user.wishlist.find(
-      (item) => item.toString() === productId,
+      (item) => item.product.toString() === productId,
     );
     if (!wishItem) {
       return res.status(404).json({
@@ -67,9 +73,10 @@ export const DeletefromWish = async (req, res) => {
     }
     // removing from wishlist
     user.wishlist = user.wishlist.filter(
-      (item) => item.toString() !== productId,
+      (item) => item.product.toString() !== productId,
     );
     await user.save();
+    await user.populate("wishlist.product");
     return res.status(200).json({
       message: "product removed from wishlist!",
       wishlist: user.wishlist,
