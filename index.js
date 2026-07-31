@@ -29,7 +29,7 @@ app.use("/api/cart", cartRoutes);
 // wihslist
 app.use("/api/wishlist", wishListRoutes);
 // orders
-app.use("/api/orders", orderRoutes);s
+app.use("/api/orders", orderRoutes);
 // Admin
 app.use("/api/admin", adminRoutes);
 
@@ -47,3 +47,5 @@ if (process.env.NODE_ENV !== "production") {
     console.log(`Server is now running on http://localhost:${PORT}`);
   });
 }
+
+export default app;
