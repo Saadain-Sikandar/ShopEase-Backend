@@ -23,7 +23,7 @@ export const AddProduct = async (req, res) => {
       price,
       stock,
       category,
-      images: [`/uploads/${req.file.filename}`],
+      images: [req.file.path],
     });
     return res.status(201).json({
       message: "Product added Successfully!",
@@ -89,7 +89,7 @@ export const UpdateProduct = async (req, res) => {
       category: req.body.category,
     };
     if (req.file) {
-      updateData.images = [`/uploads/${req.file.filename}`];
+      updateData.images = [req.file.path];
     }
 
     const updatedProduct = await Product.findByIdAndUpdate(id, updateData, {

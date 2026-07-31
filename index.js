@@ -34,10 +34,10 @@ app.use("/api/orders", orderRoutes);
 app.use("/api/admin", adminRoutes);
 
 // images
-app.use("/uploads", express.static("uploads"));
+// app.use("/uploads", express.static("uploads")); for disk storage
 
 app.get("/", (req, res) => {
-  res.send("Hello World!");
+  res.send("Server is now running!");
 });
 
 // Only listen locally — Vercel handles this itself in production
