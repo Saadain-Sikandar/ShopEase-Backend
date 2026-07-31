@@ -1,3 +1,4 @@
+import bcrypt from "bcryptjs";
 import { User } from "../Model/User.js";
 
 export const profileController = async (req, res) => {
@@ -18,7 +19,7 @@ export const profileController = async (req, res) => {
 export const UpdateProfile = async (req, res) => {
   try {
     console.log(req.body);
-    const { email, fullname, contact, city, address } = req.body;
+    const { email, fullname, contact, city, address, password } = req.body;
 
     const user = req.user;
 
@@ -42,6 +43,10 @@ export const UpdateProfile = async (req, res) => {
     if (contact) user.contact = contact;
     if (city) user.city = city;
     if (address) user.address = address;
+    
+    if (password) {
+      user.password = await bcrypt.hash(password, 8);
+    }
 
     await user.save();
 
