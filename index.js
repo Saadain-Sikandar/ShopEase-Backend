@@ -12,7 +12,6 @@ import wishListRoutes from "./Routes/wishListRoutes.js";
 
 const app = express();
 dotenv.config();
-const PORT = process.env.PORT;
 
 app.use(cors());
 app.use(express.json());
@@ -30,7 +29,7 @@ app.use("/api/cart", cartRoutes);
 // wihslist
 app.use("/api/wishlist", wishListRoutes);
 // orders
-app.use("/api/orders", orderRoutes);
+app.use("/api/orders", orderRoutes);s
 // Admin
 app.use("/api/admin", adminRoutes);
 
@@ -41,7 +40,10 @@ app.get("/", (req, res) => {
   res.send("Hello World!");
 });
 
-app.listen(PORT, () => {
-  console.log(`Server is now running on port http://localhost:${PORT}`);
-});
-
+// Only listen locally — Vercel handles this itself in production
+if (process.env.NODE_ENV !== "production") {
+  const PORT = process.env.PORT || 5000;
+  app.listen(PORT, () => {
+    console.log(`Server is now running on http://localhost:${PORT}`);
+  });
+}
