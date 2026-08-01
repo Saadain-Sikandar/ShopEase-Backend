@@ -1,4 +1,5 @@
 import { Product } from "../Model/Product.js";
+import { User } from "../Model/User.js";
 
 // add
 export const AddProduct = async (req, res) => {
@@ -126,6 +127,11 @@ export const DeleteProduct = async (req, res) => {
         messsge: "Product Not Found!",
       });
     }
+    //removing from wishlist and cart of every user
+    await User.updateMany(
+      {}, //fiter not required
+      { $pull: { wishlist: { product: id }, cart: { productId: id } } }, //update
+    );
     return res.status(200).json({
       message: "Product Deleted Succesfully!",
       deletedProduct,

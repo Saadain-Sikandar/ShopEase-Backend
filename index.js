@@ -48,4 +48,11 @@ if (process.env.NODE_ENV !== "production") {
   });
 }
 
+app.use((err, req, res, next) => {
+  console.error("GLOBAL ERROR HANDLER:", err.message);
+  console.error(err.stack);
+  res.status(err.status || 500).json({
+    message: err.message || "Something went wrong",
+  });
+});
 export default app;

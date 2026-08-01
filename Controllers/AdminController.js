@@ -4,12 +4,7 @@ import { User } from "../Model/User.js";
 
 export const GetAllOrders = async (req, res) => {
   try {
-    const orders = await Order.find().sort({ createdAt: -1 });
-    if (orders.length === 0) {
-      return res.status(404).json({
-        message: "Orders not Found!",
-      });
-    }
+    const orders = await Order.find({}).sort({ createdAt: -1 });
     return res.status(200).json({
       message: "All Orders fetched successfully!",
       orders,

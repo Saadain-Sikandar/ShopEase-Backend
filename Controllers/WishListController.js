@@ -44,6 +44,14 @@ export const getWishlist = async (req, res) => {
       path: "wishlist.product",
       model: "products",
     });
+
+    // removes any item that is deleted
+    const validwishList = user.wishlist.filter((item) => item.product);
+    if (validwishList !== user.wishlist) {
+      user.wishlist = validwishList;
+      await user.save();
+    }
+
     return res.status(200).json({
       message: "wishlist Fetched Successfully!",
       wishlist: user.wishlist,
